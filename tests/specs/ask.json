@@ -1,19 +1,118 @@
 [
   {
-    "name": "/ask",
+    "name": "/ask without args prompts for a question",
     "steps": [
       {
+        "send": { "text": "/ask" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Pose a general knowledge question"
+              "text": "What's your question? Type it below — anything from quick facts to how-tos."
             }
           }
-        ],
-        "send": {
-          "text": "/ask"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ask menu button prompts for a question",
+    "steps": [
+      {
+        "send": { "callback": "ask:start" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "What's your question? Type it below — anything from quick facts to how-tos."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/ask with question returns an answer and More details button",
+    "steps": [
+      {
+        "send": { "text": "/ask What is the capital of France?" },
+        "expect": [
+          { "method": "sendChatAction" },
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Thinking…" }
+          },
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Paris is the capital of France." }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "multi-step ask: prompt then typed question",
+    "steps": [
+      {
+        "send": { "text": "/ask" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "What's your question? Type it below — anything from quick facts to how-tos."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "What is 2+2?" },
+        "expect": [
+          { "method": "sendChatAction" },
+          { "method": "sendMessage", "payload": { "text": "Thinking…" } },
+          {
+            "method": "editMessageText",
+            "payload": { "text": "What is 2+2 = 4" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ask more details without prior answer",
+    "steps": [
+      {
+        "send": { "callback": "ask:more" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Nothing to expand yet — ask a question first."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "cancel during ask flow",
+    "steps": [
+      {
+        "send": { "text": "/ask" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "callback": "flow:cancel" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Cancelled. Tap a button whenever you're ready."
+            }
+          }
+        ]
       }
     ]
   }

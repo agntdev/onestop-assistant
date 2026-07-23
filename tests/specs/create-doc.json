@@ -1,19 +1,129 @@
 [
   {
-    "name": "/create_doc",
+    "name": "/create_doc shows format picker",
     "steps": [
       {
+        "send": { "text": "/create_doc" },
         "expect": [
           {
             "method": "sendMessage",
+            "payload": { "text": "Pick a format for your document:" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Create doc menu button shows format picker",
+    "steps": [
+      {
+        "send": { "callback": "doc:start" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Pick a format for your document:" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "pick PDF then send content → document",
+    "steps": [
+      {
+        "send": { "text": "/create_doc" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "callback": "doc:fmt:pdf" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
             "payload": {
-              "text": "Start document creation flow"
+              "text": "Send the text for your PDF — paste or type it below.\n\nTip: keep it under ~8000 characters for best results."
             }
           }
-        ],
-        "send": {
-          "text": "/create_doc"
-        }
+        ]
+      },
+      {
+        "send": { "text": "Hello world\nThis is my first document." },
+        "expect": [
+          { "method": "sendChatAction" },
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Building your document…" }
+          },
+          { "method": "deleteMessage" },
+          { "method": "sendDocument" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "pick TXT and create from content",
+    "steps": [
+      {
+        "send": { "callback": "doc:fmt:txt" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send the text for your TXT — paste or type it below.\n\nTip: keep it under ~8000 characters for best results."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "Plain notes for later." },
+        "expect": [
+          { "method": "sendChatAction" },
+          { "method": "sendMessage", "payload": { "text": "Building your document…" } },
+          { "method": "deleteMessage" },
+          { "method": "sendDocument" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "pick DOCX and create from content",
+    "steps": [
+      {
+        "send": { "callback": "doc:fmt:docx" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send the text for your DOCX — paste or type it below.\n\nTip: keep it under ~8000 characters for best results."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "A short letter to a friend." },
+        "expect": [
+          { "method": "sendChatAction" },
+          { "method": "sendMessage" },
+          { "method": "deleteMessage" },
+          { "method": "sendDocument" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/create_doc with format and content inline",
+    "steps": [
+      {
+        "send": { "text": "/create_doc txt Quick note from the command line." },
+        "expect": [
+          { "method": "sendChatAction" },
+          { "method": "sendMessage", "payload": { "text": "Building your document…" } },
+          { "method": "deleteMessage" },
+          { "method": "sendDocument" }
+        ]
       }
     ]
   }

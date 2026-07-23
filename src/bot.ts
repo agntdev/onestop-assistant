@@ -5,8 +5,37 @@ import type { StorageAdapter } from "grammy";
 // The per-chat session shape (ephemeral conversation state only). Extend as the
 // bot grows. Durable domain data must NOT live here — use the toolkit's
 // persistent storage (see AGENTS.md).
+export type FlowStep =
+  | "idle"
+  | "ask:awaiting"
+  | "image:awaiting"
+  | "doc:awaiting_content"
+  | "convert:awaiting_file"
+  | "convert:awaiting_format";
+
+export type DocFormatChoice = "txt" | "pdf" | "docx";
+
 export interface Session {
-  // example: step?: "awaiting_amount";
+  /** Current multi-step flow (ephemeral). */
+  step?: FlowStep;
+  /** Selected document format while creating a doc. */
+  docFormat?: DocFormatChoice;
+  /** Pending convert source (Telegram file_id + metadata). */
+  convertSource?: {
+    fileId: string;
+    fileName: string;
+    mimeType?: string;
+    fileSize?: number;
+  };
+  /** Last generated asset id (for redownload). */
+  lastAssetId?: string;
+  /** Last Q&A answer (for "More details?"). */
+  lastAnswer?: string;
+  lastQuestion?: string;
+  pendingQuestion?: string;
+  pendingPrompt?: string;
+  /** Flow timeout (epoch ms). */
+  flowExpiresAt?: number;
 }
 
 export type Ctx = BotContext<Session>;
