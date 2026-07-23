@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/ask",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Pose a general knowledge question"
+            }
+          }
+        ],
+        "send": {
+          "text": "/ask"
+        }
+      }
+    ]
+  }
+]
