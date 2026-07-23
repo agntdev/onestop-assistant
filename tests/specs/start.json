@@ -7,7 +7,47 @@
         "expect": [
           {
             "method": "sendMessage",
-            "payload": { "text": "👋 Welcome! Tap a button below to get started." }
+            "payload": {
+              "text": "👋 Hi! I'm your all-in-one assistant.\n\nAsk questions, generate images, create documents, or convert files — just tap a button below."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "back to menu re-renders welcome",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "callback": "menu:main" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "👋 Hi! I'm your all-in-one assistant.\n\nAsk questions, generate images, create documents, or convert files — just tap a button below."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "flow cancel returns to menu",
+    "steps": [
+      {
+        "send": { "callback": "flow:cancel" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Cancelled. Tap a button whenever you're ready."
+            }
           }
         ]
       }

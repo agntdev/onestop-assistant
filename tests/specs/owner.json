@@ -1,0 +1,31 @@
+[
+  {
+    "name": "/owner rejects non-owners",
+    "steps": [
+      {
+        "send": { "text": "/owner" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "That's only for the bot owner." }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "owner panel button rejects non-owners",
+    "steps": [
+      {
+        "send": { "callback": "owner:panel" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "sendMessage",
+            "payload": { "text": "That's only for the bot owner." }
+          }
+        ]
+      }
+    ]
+  }
+]

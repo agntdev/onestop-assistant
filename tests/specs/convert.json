@@ -1,19 +1,92 @@
 [
   {
-    "name": "/convert",
+    "name": "/convert prompts for a file upload",
     "steps": [
       {
+        "send": { "text": "/convert" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Initiate file conversion"
+              "text": "Send the file you want to convert.\n\nI handle TXT, PDF, DOCX, PNG, JPG, and SVG — up to 25 MB."
             }
           }
-        ],
-        "send": {
-          "text": "/convert"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Convert menu button prompts for upload",
+    "steps": [
+      {
+        "send": { "callback": "convert:start" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send the file you want to convert.\n\nI handle TXT, PDF, DOCX, PNG, JPG, and SVG — up to 25 MB."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "text while awaiting file reminds user to send a file",
+    "steps": [
+      {
+        "send": { "text": "/convert" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "text": "hello" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Send a file (document or photo) to convert, or tap Cancel."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "convert target without a source re-prompts upload",
+    "steps": [
+      {
+        "send": { "callback": "convert:to:pdf" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send the file you want to convert.\n\nI handle TXT, PDF, DOCX, PNG, JPG, and SVG — up to 25 MB."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "cancel convert flow",
+    "steps": [
+      {
+        "send": { "text": "/convert" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "callback": "flow:cancel" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Cancelled. Tap a button whenever you're ready."
+            }
+          }
+        ]
       }
     ]
   }

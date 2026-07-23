@@ -1,19 +1,86 @@
 [
   {
-    "name": "/image",
+    "name": "/image without args prompts for a description",
     "steps": [
       {
+        "send": { "text": "/image" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Generate image from text prompt"
+              "text": "Describe the image you want — subject, style, mood. I'll generate it from your prompt."
             }
           }
-        ],
-        "send": {
-          "text": "/image"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Image menu button prompts for a description",
+    "steps": [
+      {
+        "send": { "callback": "image:start" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Describe the image you want — subject, style, mood. I'll generate it from your prompt."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/image with prompt generates and sends a file",
+    "steps": [
+      {
+        "send": { "text": "/image a red balloon over a lake" },
+        "expect": [
+          { "method": "sendChatAction" },
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Generating your image…" }
+          },
+          { "method": "deleteMessage" },
+          { "method": "sendDocument" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "multi-step image: prompt then typed description",
+    "steps": [
+      {
+        "send": { "text": "/image" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "text": "sunset over mountains" },
+        "expect": [
+          { "method": "sendChatAction" },
+          { "method": "sendMessage", "payload": { "text": "Generating your image…" } },
+          { "method": "deleteMessage" },
+          { "method": "sendDocument" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "download expired asset",
+    "steps": [
+      {
+        "send": { "callback": "image:dl:asset_missing" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "That file expired or isn't available. Generated files are kept for 7 days — make a new one?"
+            }
+          }
+        ]
       }
     ]
   }
