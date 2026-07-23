@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/convert",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Initiate file conversion"
+            }
+          }
+        ],
+        "send": {
+          "text": "/convert"
+        }
+      }
+    ]
+  }
+]
